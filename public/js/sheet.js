@@ -34,3 +34,39 @@ export function autoMap(placeholders, headers) {
   }
   return map;
 }
+
+export function renderMappingUI(placeholders, headers, mapping, onChange) {
+  const container = document.createElement('div');
+  container.className = 'mapping-ui';
+  const header = document.createElement('div');
+  header.className = 'mapping-header';
+  header.innerHTML = '<strong>Map spreadsheet columns to placeholders</strong>';
+  container.appendChild(header);
+
+  const list = document.createElement('div');
+  list.className = 'mapping-list';
+  for (const ph of placeholders) {
+    const row = document.createElement('div');
+    row.className = 'mapping-row';
+    const label = document.createElement('label');
+    label.textContent = ph;
+    label.className = 'mapping-label';
+    const select = document.createElement('select');
+    select.className = 'input mapping-select';
+    select.innerHTML = '<option value="">-- skip --</option>' +
+      headers.map(h => '<option value="' + escapeAttr(h) + '"' + (mapping[ph] === h ? ' selected' : '') + '>' + escapeHtml(h) + '</option>').join('');
+    select.onchange = () => { onChange(ph, select.value); };
+    row.appendChild(label);
+    row.appendChild(select);
+    list.appendChild(row);
+  }
+  container.appendChild(list);
+  return container;
+}
+
+function escapeHtml(text) {
+  return (text || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(text) {
+  return (text || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
