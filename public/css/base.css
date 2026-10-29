@@ -25,6 +25,27 @@ body {
 a { color: var(--teal); text-decoration: none; }
 button { cursor: pointer; font-family: inherit; }
 
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-link:focus {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 0.75rem;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 0.5rem;
+  z-index: 999;
+}
+
 .loader {
   border: 3px solid var(--border);
   border-top-color: var(--teal);
@@ -104,3 +125,12 @@ button { cursor: pointer; font-family: inherit; }
 }
 .badge-success { background: rgba(15, 166, 138, 0.12); color: #005142; }
 .badge-warning { background: rgba(240, 162, 59, 0.12); color: #663e00; }
+
+.dark {
+  --bg: #0c1220;
+  --surface: #162038;
+  --text: #eaf0fb;
+  --muted: #93a0bb;
+  --border: #26324f;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}

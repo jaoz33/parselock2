@@ -67,7 +67,7 @@ function renderEditor() {
   const task = state.tasks.find(t => t.id === id) || state.current;
   if (!task) { location.hash = '#templates'; return; }
   state.current = task;
-  document.getElementById('app').innerHTML = '<div class="editor-shell"><div class="editor-topbar"><button id="editor-close" class="btn btn-secondary">Close</button><input id="editor-title" class="input" value="' + escape(task.title) + '" /><button id="editor-save" class="btn">Save</button><button id="editor-generate" class="btn">Generate</button><button id="import-docx" class="btn btn-secondary">Import DOCX</button><input type="file" id="docx-input" accept=".docx" hidden /></div><div id="tool-drawer" class="tool-drawer"><div id="drawer-handle" class="drawer-handle" aria-expanded="false">Tools</div><div class="tool-panels"><div class="tool-group"><button onclick="window.Toolbar.toggleBold()" title="Bold"><b>B</b></button><button onclick="window.Toolbar.toggleItalic()" title="Italic"><i>I</i></button><button onclick="window.Toolbar.toggleUnderline()" title="Underline"><u>U</u></button><button onclick="window.Toolbar.toggleStrike()" title="Strikethrough"><s>S</s></button><button onclick="window.Toolbar.toggleSub()" title="Subscript">Sub</button><button onclick="window.Toolbar.toggleSuper()" title="Superscript">Sup</button></div><div class="tool-group"><button onclick="window.Toolbar.justifyLeft()" title="Align left">Left</button><button onclick="window.Toolbar.justifyCenter()" title="Center">Center</button><button onclick="window.Toolbar.justifyRight()" title="Right">Right</button><button onclick="window.Toolbar.justifyFull()" title="Justify">Justify</button></div><div class="tool-group"><button onclick="window.Toolbar.insertBullet()" title="Bullet list">• List</button><button onclick="window.Toolbar.insertNumber()" title="Numbered list">1. List</button><button onclick="window.Toolbar.indent()" title="Indent">Indent</button><button onclick="window.Toolbar.outdent()" title="Outdent">Outdent</button></div><div class="tool-group"><button onclick="window.Toolbar.formatBlock(&quot;H1&quot;)" title="Heading 1">H1</button><button onclick="window.Toolbar.formatBlock(&quot;H2&quot;)" title="Heading 2">H2</button><button onclick="window.Toolbar.formatBlock(&quot;P&quot;)" title="Paragraph">P</button></div><div class="tool-group"><button onclick="window.Toolbar.insertTable()" title="Insert table">Table</button><button onclick="window.Toolbar.insertPageBreak()" title="Page break">Break</button><button onclick="window.Toolbar.insertPlaceholder()" title="Insert placeholder">{{}}</button></div><div class="tool-group"><button onclick="window.Toolbar.applyFont(\'system-ui\')" title="System font">Sans</button><button onclick="window.Toolbar.applyFont(\'ui-monospace\')" title="Mono font">Mono</button><button onclick="window.Toolbar.applyFontSize(3)" title="Normal size">Norm</button><button onclick="window.Toolbar.applyFontSize(1)" title="Small">Small</button></div><div class="tool-group"><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#12305e&quot;)" title="Navy">Navy</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#0fa68a&quot;)" title="Teal">Teal</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#f0a23b&quot;)" title="Amber">Amber</button><button onclick="window.Toolbar.clearFormat()" title="Clear formatting">Clear</button></div></div></div><div id="editor" class="page-canvas" contenteditable="true"></div><div id="sheet-panel" class="sheet-panel" hidden><div class="sheet-toolbar"><input type="file" id="sheet-input" accept=".csv,.xlsx,.xls" /><button id="preview-sheet" class="btn">Preview</button><button id="clear-sheet" class="btn btn-secondary">Clear</button><select id="filename-column"><option value="">Filename column...</option></select><button id="download-docx" class="btn">DOCX</button><button id="download-pdf" class="btn">PDF</button></div><div id="sheet-preview" class="sheet-preview"></div><div id="mapping-container" class="mapping-container"></div></div></div>';
+  document.getElementById('app').innerHTML = '<div class="editor-shell"><div class="editor-topbar"><button id="editor-close" class="btn btn-secondary">Close</button><input id="editor-title" class="input" value="' + escape(task.title) + '" /><button id="editor-save" class="btn">Save</button><button id="editor-generate" class="btn">Generate</button><button id="import-docx" class="btn btn-secondary">Import DOCX</button><button id="page-setup" class="btn btn-secondary">Page Setup</button><input type="file" id="docx-input" accept=".docx" hidden /></div><div id="tool-drawer" class="tool-drawer"><div id="drawer-handle" class="drawer-handle" aria-expanded="false">Tools</div><div class="tool-panels"><div class="tool-group"><button onclick="window.Toolbar.toggleBold()" title="Bold"><b>B</b></button><button onclick="window.Toolbar.toggleItalic()" title="Italic"><i>I</i></button><button onclick="window.Toolbar.toggleUnderline()" title="Underline"><u>U</u></button><button onclick="window.Toolbar.toggleStrike()" title="Strikethrough"><s>S</s></button><button onclick="window.Toolbar.toggleSub()" title="Subscript">Sub</button><button onclick="window.Toolbar.toggleSuper()" title="Superscript">Sup</button></div><div class="tool-group"><button onclick="window.Toolbar.justifyLeft()" title="Align left">Left</button><button onclick="window.Toolbar.justifyCenter()" title="Center">Center</button><button onclick="window.Toolbar.justifyRight()" title="Right">Right</button><button onclick="window.Toolbar.justifyFull()" title="Justify">Justify</button></div><div class="tool-group"><button onclick="window.Toolbar.insertBullet()" title="Bullet list">• List</button><button onclick="window.Toolbar.insertNumber()" title="Numbered list">1. List</button><button onclick="window.Toolbar.indent()" title="Indent">Indent</button><button onclick="window.Toolbar.outdent()" title="Outdent">Outdent</button></div><div class="tool-group"><button onclick="window.Toolbar.formatBlock(&quot;H1&quot;)" title="Heading 1">H1</button><button onclick="window.Toolbar.formatBlock(&quot;H2&quot;)" title="Heading 2">H2</button><button onclick="window.Toolbar.formatBlock(&quot;P&quot;)" title="Paragraph">P</button></div><div class="tool-group"><button onclick="window.Toolbar.insertTable()" title="Insert table">Table</button><button onclick="window.Toolbar.insertPageBreak()" title="Page break">Break</button><button onclick="window.Toolbar.insertPlaceholder()" title="Insert placeholder">{{}}</button></div><div class="tool-group"><button onclick="window.Toolbar.applyFont(&quot;system-ui&quot;)" title="System font">Sans</button><button onclick="window.Toolbar.applyFont(&quot;ui-monospace&quot;)" title="Mono font">Mono</button><button onclick="window.Toolbar.applyFontSize(3)" title="Normal size">Norm</button><button onclick="window.Toolbar.applyFontSize(1)" title="Small">Small</button></div><div class="tool-group"><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#12305e&quot;)" title="Navy">Navy</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#0fa68a&quot;)" title="Teal">Teal</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#f0a23b&quot;)" title="Amber">Amber</button><button onclick="window.Toolbar.clearFormat()" title="Clear formatting">Clear</button></div></div></div><div id="editor" class="page-canvas" contenteditable="true"></div><div id="sheet-panel" class="sheet-panel" hidden><div class="sheet-toolbar"><input type="file" id="sheet-input" accept=".csv,.xlsx,.xls" /><button id="preview-sheet" class="btn">Preview</button><button id="clear-sheet" class="btn btn-secondary">Clear</button><select id="filename-column"><option value="">Filename column...</option></select><button id="download-docx" class="btn">DOCX</button><button id="download-pdf" class="btn">PDF</button></div><div id="sheet-preview" class="sheet-preview"></div><div id="mapping-container" class="mapping-container"></div></div></div>';
   initDrawer();
   const editor = document.getElementById('editor');
   if (editor) editor.contentEditable = 'true';
@@ -93,6 +93,7 @@ function bindEditorActions() {
   document.getElementById('editor-generate').onclick = () => { const panel = document.getElementById('sheet-panel'); panel.hidden = !panel.hidden; };
   document.getElementById('import-docx').onclick = () => document.getElementById('docx-input').click();
   document.getElementById('docx-input').onchange = importDocx;
+  document.getElementById('page-setup').onclick = showPageSetup;
   document.getElementById('preview-sheet').onclick = previewSheet;
   document.getElementById('clear-sheet').onclick = clearSheet;
   document.getElementById('download-docx').onclick = downloadDocx;
@@ -250,7 +251,67 @@ function init() {
   Ads.init();
   window.addEventListener('hashchange', navigate);
   initPrivacyBanner();
+  initThemeToggle();
+  initKeyboardShortcuts();
   navigate();
+}
+
+function initThemeToggle() {
+  const btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  const saved = localStorage.getItem('parselock-theme');
+  if (saved === 'dark') document.documentElement.classList.add('dark');
+  btn.textContent = document.documentElement.classList.contains('dark') ? 'Light' : 'Dark';
+  btn.onclick = () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('parselock-theme', isDark ? 'dark' : 'light');
+    btn.textContent = isDark ? 'Light' : 'Dark';
+  };
+}
+
+function showPageSetup() {
+  const editor = document.getElementById('editor');
+  if (!editor) return;
+  const current = state.current?.page_setup || { size: 'letter', orientation: 'portrait', margins: { top: 1, right: 1, bottom: 1, left: 1 } };
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = '<div class="modal-backdrop"></div><div class="modal-dialog"><h3 style="margin:0 0 1rem;font-size:1rem;">Page Setup</h3><div class="page-setup-form"><div class="page-setup-row"><label>Size</label><select id="ps-size"><option value="letter">Letter</option><option value="a4">A4</option><option value="legal">Legal</option></select></div><div class="page-setup-row"><label>Orientation</label><select id="ps-orientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div><div class="page-setup-row"><label>Margins (in)</label><input id="ps-margin-top" type="number" step="0.25" value="' + current.margins?.top + '" style="width:60px;" /><input id="ps-margin-right" type="number" step="0.25" value="' + current.margins?.right + '" style="width:60px;" /><input id="ps-margin-bottom" type="number" step="0.25" value="' + current.margins?.bottom + '" style="width:60px;" /><input id="ps-margin-left" type="number" step="0.25" value="' + current.margins?.left + '" style="width:60px;" /></div></div><div class="modal-actions"><button id="ps-cancel" class="btn btn-secondary">Cancel</button><button id="ps-apply" class="btn">Apply</button></div></div>';
+  document.body.appendChild(modal);
+  modal.querySelector('#ps-size').value = current.size;
+  modal.querySelector('#ps-orientation').value = current.orientation;
+  const apply = () => {
+    const setup = {
+      size: modal.querySelector('#ps-size').value,
+      orientation: modal.querySelector('#ps-orientation').value,
+      margins: {
+        top: parseFloat(modal.querySelector('#ps-margin-top').value) || 1,
+        right: parseFloat(modal.querySelector('#ps-margin-right').value) || 1,
+        bottom: parseFloat(modal.querySelector('#ps-margin-bottom').value) || 1,
+        left: parseFloat(modal.querySelector('#ps-margin-left').value) || 1
+      }
+    };
+    applyPageSetup(setup);
+    if (state.current) {
+      state.current.page_setup = setup;
+      state.dirty = true;
+    }
+    modal.remove();
+    toast('Page setup applied');
+  };
+  modal.querySelector('#ps-apply').onclick = apply;
+  modal.querySelector('#ps-cancel').onclick = () => modal.remove();
+  modal.querySelector('.modal-backdrop').onclick = () => modal.remove();
+}
+
+function initKeyboardShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    if (!e.ctrlKey && !e.metaKey) return;
+    const key = e.key.toLowerCase();
+    if (key === 's') { e.preventDefault(); document.getElementById('editor-save')?.click(); }
+    if (key === 'b') { e.preventDefault(); window.Toolbar?.toggleBold(); }
+    if (key === 'i') { e.preventDefault(); window.Toolbar?.toggleItalic(); }
+    if (key === 'u') { e.preventDefault(); window.Toolbar?.toggleUnderline(); }
+  });
 }
 
 function initPrivacyBanner() {

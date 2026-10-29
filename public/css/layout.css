@@ -51,6 +51,16 @@
 .auth-area { display: flex; gap: 0.5rem; align-items: center; color: #e2e8f0; font-size: 0.875rem; }
 .auth-area .btn { padding: 6px 12px; font-size: 0.8125rem; }
 
+.theme-toggle {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 6px 10px;
+  font-size: 0.8125rem;
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.08); }
+
 .ad-slot {
   text-align: center;
   padding: 0.75rem 1rem;
@@ -58,6 +68,9 @@
   background: #eef2f7;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .ad-placeholder {
   color: var(--muted);
@@ -66,6 +79,12 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+.ad-top { min-height: 90px; }
+.ad-bottom { min-height: 250px; }
+.ad-300x250 { width: 300px; height: 250px; }
+.ad-300x600 { width: 300px; height: 600px; }
+.ad-728x90 { width: 728px; height: 90px; }
+
 .site-footer {
   text-align: center;
   padding: 1.5rem;
