@@ -22,7 +22,7 @@ function navigate() {
 
 function renderTemplates() {
   clearAutosave();
-  document.getElementById('app').innerHTML = '<div class="container"><div class="toolbar"><button id="new-template" class="btn btn-primary">New Template</button></div><div id="template-list"></div></div>';
+  document.getElementById('app').innerHTML = '<div class="container"><div class="toolbar"><button id="new-template" class="btn">New Template</button></div><div id="template-list"></div></div>';
   document.getElementById('new-template').onclick = createNewTemplate;
   loadTemplates();
 }
@@ -66,7 +66,7 @@ function renderEditor() {
   const task = state.tasks.find(t => t.id === id) || state.current;
   if (!task) { location.hash = '#templates'; return; }
   state.current = task;
-  document.getElementById('app').innerHTML = '<div class="editor-shell"><div class="editor-topbar"><button id="editor-close" class="btn">Close</button><input id="editor-title" class="input" value="' + escape(task.title) + '" /><button id="editor-save" class="btn btn-primary">Save</button><button id="editor-generate" class="btn btn-accent">Generate</button></div><div id="tool-drawer" class="tool-drawer"><div id="drawer-handle" class="drawer-handle" aria-expanded="false">Tools</div><div class="tool-panels"><div class="tool-group"><button onclick="window.Toolbar.toggleBold()" title="Bold">B</button><button onclick="window.Toolbar.toggleItalic()" title="Italic">I</button><button onclick="window.Toolbar.toggleUnderline()" title="Underline">U</button><button onclick="window.Toolbar.toggleStrike()" title="Strikethrough">S</button></div><div class="tool-group"><button onclick="window.Toolbar.insertPageBreak()">Page Break</button><button onclick="window.Toolbar.insertTable()">Table</button></div><div class="tool-group"><button onclick="window.Toolbar.insertPlaceholder()">Insert Placeholder</button></div></div></div><div id="editor" class="page-canvas" contenteditable="true"></div><div id="sheet-panel" class="sheet-panel" hidden><div class="sheet-toolbar"><input type="file" id="sheet-input" accept=".csv,.xlsx,.xls" /><button id="preview-sheet" class="btn">Preview</button><select id="filename-column"><option value="">Filename column...</option></select><button id="download-docx" class="btn">DOCX</button><button id="download-pdf" class="btn">PDF</button></div><div id="sheet-preview" class="sheet-preview"></div></div></div>';
+  document.getElementById('app').innerHTML = '<div class="editor-shell"><div class="editor-topbar"><button id="editor-close" class="btn">Close</button><input id="editor-title" class="input" value="' + escape(task.title) + '" /><button id="editor-save" class="btn">Save</button><button id="editor-generate" class="btn">Generate</button></div><div id="tool-drawer" class="tool-drawer"><div id="drawer-handle" class="drawer-handle" aria-expanded="false">Tools</div><div class="tool-panels"><div class="tool-group"><button onclick="window.Toolbar.toggleBold()" title="Bold">B</button><button onclick="window.Toolbar.toggleItalic()" title="Italic">I</button><button onclick="window.Toolbar.toggleUnderline()" title="Underline">U</button><button onclick="window.Toolbar.toggleStrike()" title="Strikethrough">S</button></div><div class="tool-group"><button onclick="window.Toolbar.insertPageBreak()">Page Break</button><button onclick="window.Toolbar.insertTable()">Table</button></div><div class="tool-group"><button onclick="window.Toolbar.insertPlaceholder()">Insert Placeholder</button></div></div></div><div id="editor" class="page-canvas" contenteditable="true"></div><div id="sheet-panel" class="sheet-panel" hidden><div class="sheet-toolbar"><input type="file" id="sheet-input" accept=".csv,.xlsx,.xls" /><button id="preview-sheet" class="btn">Preview</button><select id="filename-column"><option value="">Filename column...</option></select><button id="download-docx" class="btn">DOCX</button><button id="download-pdf" class="btn">PDF</button></div><div id="sheet-preview" class="sheet-preview"></div></div></div>';
   initDrawer();
   const editor = document.getElementById('editor');
   if (editor) editor.contentEditable = 'true';
@@ -172,14 +172,29 @@ function init() {
   currentUser().then(u => { state.user = u; renderAuth(); loadTemplates(); }).catch(() => {});
   Ads.init();
   window.addEventListener('hashchange', navigate);
+  initPrivacyBanner();
   navigate();
+}
+
+function initPrivacyBanner() {
+  const banner = document.getElementById('privacy-banner');
+  if (!banner) return;
+  if (localStorage.getItem('parselock-privacy-accepted') === '1') {
+    banner.hidden = true;
+    return;
+  }
+  banner.hidden = false;
+  document.getElementById('privacy-accept').onclick = () => {
+    localStorage.setItem('parselock-privacy-accepted', '1');
+    banner.hidden = true;
+  };
 }
 
 function renderAuth() {
   const el = document.getElementById('auth-area');
   if (!el) return;
   if (state.user) {
-    el.innerHTML = '<span>' + escape(state.user.email) + '</span><button id="sign-out">Sign out</button>';
+    el.innerHTML = '<span>' + escape(state.user.email) + '</span><span class="badge badge-success">RA 10173 compliant</span><button id="sign-out" class="btn btn-secondary btn-small">Sign out</button>';
     document.getElementById('sign-out').onclick = () => doSignOut().then(() => location.reload());
   } else {
     el.innerHTML = '<button id="sign-in">Sign in</button><button id="sign-up">Sign up</button>';

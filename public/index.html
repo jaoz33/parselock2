@@ -11,10 +11,20 @@
   <link rel="stylesheet" href="/css/components.css" />
 </head>
 <body>
+  <div id="privacy-banner" class="privacy-banner" hidden>
+    <div>
+      <strong>Privacy notice</strong>
+      <span>ParseLock keeps data local and follows RA 10173. By continuing you accept our minimal use of local storage and auth cookies.</span>
+    </div>
+    <div style="display:flex;gap:0.5rem;">
+      <button id="privacy-accept" class="btn btn-small">Accept</button>
+      <a href="#privacy" class="btn btn-secondary btn-small">Learn more</a>
+    </div>
+  </div>
   <header class="site-header">
     <div class="container header-inner">
       <a href="#templates" class="brand" aria-label="ParseLock home">
-        <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0B1F3A"/><rect x="8" y="6" width="16" height="20" rx="3" fill="#fff"/><rect x="12" y="10" width="8" height="2" rx="1" fill="#14B8A6"/><rect x="12" y="16" width="8" height="2" rx="1" fill="#14B8A6"/><circle cx="22" cy="22" r="3" fill="#14B8A6"/></svg>
+        <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#12305e"/><rect x="8" y="6" width="16" height="20" rx="3" fill="#fff"/><rect x="12" y="10" width="8" height="2" rx="1" fill="#0fa68a"/><rect x="12" y="16" width="8" height="2" rx="1" fill="#0fa68a"/><circle cx="22" cy="22" r="3" fill="#0fa68a"/></svg>
         <span class="wordmark">Parse<span class="accent">Lock</span></span>
       </a>
       <nav class="main-nav" aria-label="Primary">
