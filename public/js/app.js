@@ -188,7 +188,7 @@ function importDocx() {
   const file = input.files[0];
   if (!file) return;
   try {
-    const { default: mammoth } = await import('https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js');
+    const mammoth = (await import('https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js')).default;
     const arrayBuffer = await file.arrayBuffer();
     const result = await mammoth.convertToHtml({ arrayBuffer });
     const editor = document.getElementById('editor');

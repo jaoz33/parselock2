@@ -19,7 +19,7 @@ function getTextNodes(root) {
 }
 
 function replacePlaceholderRuns(textNodes, placeholder, value, inherited) {
-  const regex = new RegExp('\{\{\s*' + placeholder.replace(/[.*+?^${}()|[\]\]/g, '\$&') + '\s*\}\}', 'gi');
+  const regex = new RegExp('\{\{\s*' + placeholder.replace(/[\^$.*+?()[\]{}|]/g, '\$&') + '\s*\}\}', 'gi');
   for (const node of textNodes) {
     if (!regex.test(node.textContent)) continue;
     const parent = node.parentElement;
