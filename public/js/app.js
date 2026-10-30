@@ -73,7 +73,7 @@ function renderEditor() {
   const task = state.tasks.find(t => t.id === id) || state.current;
   if (!task) { location.hash = '#templates'; return; }
   state.current = task;
-  document.getElementById('app').innerHTML = '<div class="editor-shell"><div class="editor-topbar"><button id="editor-close" class="btn btn-secondary">Close</button><input id="editor-title" class="input" value="' + escape(task.title) + '" /><button id="editor-save" class="btn">Save</button><button id="editor-generate" class="btn">Generate</button><button id="import-docx" class="btn btn-secondary">Import DOCX</button><button id="page-setup" class="btn btn-secondary">Page Setup</button><input type="file" id="docx-input" accept=".docx" hidden /></div><div id="tool-drawer" class="tool-drawer"><div id="drawer-handle" class="drawer-handle" aria-expanded="false">Tools</div><div class="tool-panels"><div class="tool-group"><button onclick="window.Toolbar.toggleBold()" title="Bold"><b>B</b></button><button onclick="window.Toolbar.toggleItalic()" title="Italic"><i>I</i></button><button onclick="window.Toolbar.toggleUnderline()" title="Underline"><u>U</u></button><button onclick="window.Toolbar.toggleStrike()" title="Strikethrough"><s>S</s></button><button onclick="window.Toolbar.toggleSub()" title="Subscript">Sub</button><button onclick="window.Toolbar.toggleSuper()" title="Superscript">Sup</button></div><div class="tool-group"><button onclick="window.Toolbar.justifyLeft()" title="Align left">Left</button><button onclick="window.Toolbar.justifyCenter()" title="Center">Center</button><button onclick="window.Toolbar.justifyRight()" title="Right">Right</button><button onclick="window.Toolbar.justifyFull()" title="Justify">Justify</button></div><div class="tool-group"><button onclick="window.Toolbar.insertBullet()" title="Bullet list">• List</button><button onclick="window.Toolbar.insertNumber()" title="Numbered list">1. List</button><button onclick="window.Toolbar.indent()" title="Indent">Indent</button><button onclick="window.Toolbar.outdent()" title="Outdent">Outdent</button></div><div class="tool-group"><button onclick="window.Toolbar.formatBlock(&quot;H1&quot;)" title="Heading 1">H1</button><button onclick="window.Toolbar.formatBlock(&quot;H2&quot;)" title="Heading 2">H2</button><button onclick="window.Toolbar.formatBlock(&quot;P&quot;)" title="Paragraph">P</button></div><div class="tool-group"><button onclick="window.Toolbar.insertTable()" title="Insert table">Table</button><button onclick="window.Toolbar.insertPageBreak()" title="Page break">Break</button><button onclick="window.Toolbar.insertPlaceholder()" title="Insert placeholder">{{}}</button></div><div class="tool-group"><button onclick="window.Toolbar.applyFont(&quot;system-ui&quot;)" title="System font">Sans</button><button onclick="window.Toolbar.applyFont(&quot;ui-monospace&quot;)" title="Mono font">Mono</button><button onclick="window.Toolbar.applyFontSize(3)" title="Normal size">Norm</button><button onclick="window.Toolbar.applyFontSize(1)" title="Small">Small</button></div><div class="tool-group"><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#12305e&quot;)" title="Navy">Navy</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#0fa68a&quot;)" title="Teal">Teal</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#f0a23b&quot;)" title="Amber">Amber</button><button onclick="window.Toolbar.clearFormat()" title="Clear formatting">Clear</button></div></div></div><div id="editor" class="page-canvas" contenteditable="true"></div><div id="sheet-panel" class="sheet-panel" hidden><div class="sheet-toolbar"><input type="file" id="sheet-input" accept=".csv,.xlsx,.xls" /><button id="preview-sheet" class="btn">Preview</button><button id="clear-sheet" class="btn btn-secondary">Clear</button><select id="filename-column"><option value="">Filename column...</option></select><button id="download-docx" class="btn">DOCX</button><button id="download-pdf" class="btn">PDF</button></div><div id="sheet-preview" class="sheet-preview"></div><div id="mapping-container" class="mapping-container"></div></div></div>';
+  document.getElementById('app').innerHTML = '<div class="editor-shell"><div class="editor-topbar"><button id="editor-close" class="btn btn-secondary">Close</button><input id="editor-title" class="input" value="' + escape(task.title) + '" /><button id="editor-save" class="btn">Save</button><button id="editor-generate" class="btn">Generate</button><button id="import-docx" class="btn btn-secondary">Import DOCX</button><button id="page-setup" class="btn btn-secondary">Page Setup</button><input type="file" id="docx-input" accept=".docx" hidden /></div><div id="tool-drawer" class="tool-drawer"><div id="drawer-handle" class="drawer-handle" aria-expanded="false">Tools</div><div class="tool-panels"><div class="tool-group"><button onclick="window.Toolbar.toggleBold()" title="Bold"><b>B</b></button><button onclick="window.Toolbar.toggleItalic()" title="Italic"><i>I</i></button><button onclick="window.Toolbar.toggleUnderline()" title="Underline"><u>U</u></button><button onclick="window.Toolbar.toggleStrike()" title="Strikethrough"><s>S</s></button><button onclick="window.Toolbar.toggleSub()" title="Subscript">Sub</button><button onclick="window.Toolbar.toggleSuper()" title="Superscript">Sup</button></div><div class="tool-group"><button onclick="window.Toolbar.justifyLeft()" title="Align left">Left</button><button onclick="window.Toolbar.justifyCenter()" title="Center">Center</button><button onclick="window.Toolbar.justifyRight()" title="Right">Right</button><button onclick="window.Toolbar.justifyFull()" title="Justify">Justify</button></div><div class="tool-group"><button onclick="window.Toolbar.insertBullet()" title="Bullet list">List</button><button onclick="window.Toolbar.insertNumber()" title="Numbered list">1. List</button><button onclick="window.Toolbar.indent()" title="Indent">Indent</button><button onclick="window.Toolbar.outdent()" title="Outdent">Outdent</button></div><div class="tool-group"><button onclick="window.Toolbar.formatBlock(&quot;H1&quot;)" title="Heading 1">H1</button><button onclick="window.Toolbar.formatBlock(&quot;H2&quot;)" title="Heading 2">H2</button><button onclick="window.Toolbar.formatBlock(&quot;P&quot;)" title="Paragraph">P</button></div><div class="tool-group"><button onclick="window.Toolbar.insertTable()" title="Insert table">Table</button><button onclick="window.Toolbar.insertPageBreak()" title="Page break">Break</button><button onclick="window.Toolbar.insertPlaceholder()" title="Insert placeholder">{{}}</button></div><div class="tool-group"><button onclick="window.Toolbar.applyFont(&quot;system-ui&quot;)" title="System font">Sans</button><button onclick="window.Toolbar.applyFont(&quot;ui-monospace&quot;)" title="Mono font">Mono</button><button onclick="window.Toolbar.applyFontSize(3)" title="Normal size">Norm</button><button onclick="window.Toolbar.applyFontSize(1)" title="Small">Small</button></div><div class="tool-group"><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#12305e&quot;)" title="Navy">Navy</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#0fa68a&quot;)" title="Teal">Teal</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#f0a23b&quot;)" title="Amber">Amber</button><button onclick="window.Toolbar.clearFormat()" title="Clear formatting">Clear</button></div></div></div><div id="editor" class="page-canvas" contenteditable="true"></div><div id="sheet-panel" class="sheet-panel" hidden><div class="sheet-toolbar"><input type="file" id="sheet-input" accept=".csv,.xlsx,.xls" /><button id="preview-sheet" class="btn">Preview</button><button id="preview-merge" class="btn btn-secondary">Preview First</button><button id="clear-sheet" class="btn btn-secondary">Clear</button><select id="filename-column"><option value="">Filename column...</option></select><button id="download-docx" class="btn">DOCX</button><button id="download-pdf" class="btn">PDF</button></div><div id="sheet-preview" class="sheet-preview"></div><div id="mapping-container" class="mapping-container"></div></div></div>';
   initDrawer();
   const editor = document.getElementById('editor');
   if (editor) editor.contentEditable = 'true';
@@ -107,9 +107,10 @@ function bindEditorActions() {
   document.getElementById('docx-input').onchange = importDocx;
   document.getElementById('page-setup').onclick = showPageSetup;
   document.getElementById('preview-sheet').onclick = previewSheet;
+  document.getElementById('preview-merge').onclick = previewFirstMerge;
   document.getElementById('clear-sheet').onclick = clearSheet;
-  document.getElementById('download-docx').onclick = downloadDocx;
-  document.getElementById('download-pdf').onclick = downloadPdf;
+  document.getElementById('download-docx').onclick = () => downloadDocx();
+  document.getElementById('download-pdf').onclick = () => downloadPdf();
   window.Toolbar = { execCmd, formatBlock, insertPlaceholder, insertTable, insertPageBreak, toggleBold, toggleItalic, toggleUnderline, toggleStrike, toggleSub, toggleSuper, justifyLeft, justifyCenter, justifyRight, justifyFull, insertBullet, insertNumber, indent, outdent, clearFormat, applyFont, applyFontSize, applyColor };
 }
 
@@ -137,45 +138,77 @@ async function previewSheet() {
   }
 }
 
+function previewFirstMerge() {
+  if (!state.sheet?.length) { toast('Upload a sheet first'); return; }
+  const col = document.getElementById('filename-column').value;
+  const editor = document.getElementById('editor');
+  const row = state.sheet[0];
+  const html = mergeRow(editor.innerHTML, row, state.mapping, state.placeholders, state.inheritFormats);
+  const name = (col ? row[col] : 'row_1') + '.html';
+  const win = window.open('', '_blank');
+  win.document.write('<html><head><title>Preview: ' + escape(name) + '</title><style>body{font-family:sans-serif;padding:40px;background:#f3f5f9} .preview-box{background:#fff;padding:40px;border:1px solid #dde3ee;border-radius:8px;max-width:800px;margin:0 auto;}</style></head><body><div class="preview-box">' + html + '</div></body></html>');
+  win.document.close();
+}
+
 async function downloadDocx() {
   if (!state.sheet?.length) { toast('Upload a sheet first'); return; }
   const col = document.getElementById('filename-column').value;
   const editor = document.getElementById('editor');
   const files = {};
+  let errors = 0;
   for (let i = 0; i < state.sheet.length; i++) {
     const row = state.sheet[i];
-    const html = mergeRow(editor.innerHTML, row, state.mapping, state.placeholders, state.inheritFormats);
     const name = (col ? row[col] : ('row_' + (i + 1))) + '.docx';
-    showProgress('Generating DOCX', i + 1, state.sheet.length);
-    const { default: docx } = await import('https://cdn.jsdelivr.net/npm/docx@9.1.1/build/index.umd.min.js');
-    const doc = new docx.Document({
-      sections: [{ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: html, break: 1 })] })] }]
-    });
-    const blob = await docx.Packer.toBlob(doc);
-    files[name] = blob;
+    showProgress('Generating: ' + name, i + 1, state.sheet.length);
+    try {
+      const html = mergeRow(editor.innerHTML, row, state.mapping, state.placeholders, state.inheritFormats);
+      const { default: docx } = await import('https://cdn.jsdelivr.net/npm/docx@9.1.1/build/index.umd.min.js');
+      const doc = new docx.Document({
+        sections: [{ children: [new docx.Paragraph({ children: [new docx.TextRun({ text: html, break: 1 })] })] }]
+      });
+      const blob = await docx.Packer.toBlob(doc);
+      files[name] = blob;
+    } catch (e) {
+      errors++;
+      toast('Failed: ' + name + ' - ' + e.message, 4000);
+    }
   }
   hideProgress();
-  await downloadZip(files, 'parselock-export');
-  toast('Export complete');
+  if (errors) {
+    toast('Generated ' + (state.sheet.length - errors) + ' of ' + state.sheet.length + ' documents. ' + errors + ' failed.', 5000);
+  } else {
+    toast('Export complete: ' + state.sheet.length + ' documents');
+  }
+  if (Object.keys(files).length) await downloadZip(files, 'parselock-export');
 }
 
 async function downloadPdf() {
   if (!state.sheet?.length) { toast('Upload a sheet first'); return; }
   const col = document.getElementById('filename-column').value;
   const editor = document.getElementById('editor');
+  let errors = 0;
   for (let i = 0; i < state.sheet.length; i++) {
     const row = state.sheet[i];
-    const html = mergeRow(editor.innerHTML, row, state.mapping, state.placeholders, state.inheritFormats);
     const name = (col ? row[col] : ('row_' + (i + 1))) + '.pdf';
-    showProgress('Generating PDF', i + 1, state.sheet.length);
-    const win = window.open('', '_blank');
-    win.document.write('<html><head><title>' + name + '</title><style>body{font-family:sans-serif;padding:40px}</style></head><body>' + html + '</body></html>');
-    win.document.close();
-    await new Promise(r => setTimeout(r, 500));
-    win.print();
-    hideProgress();
+    showProgress('Generating: ' + name, i + 1, state.sheet.length);
+    try {
+      const html = mergeRow(editor.innerHTML, row, state.mapping, state.placeholders, state.inheritFormats);
+      const win = window.open('', '_blank');
+      win.document.write('<html><head><title>' + name + '</title><style>body{font-family:sans-serif;padding:40px}</style></head><body>' + html + '</body></html>');
+      win.document.close();
+      await new Promise(r => setTimeout(r, 500));
+      win.print();
+    } catch (e) {
+      errors++;
+      toast('Failed: ' + name + ' - ' + e.message, 4000);
+    }
   }
-  toast('Export complete');
+  hideProgress();
+  if (errors) {
+    toast('Generated ' + (state.sheet.length - errors) + ' of ' + state.sheet.length + ' PDFs. ' + errors + ' failed.', 5000);
+  } else {
+    toast('Export complete: ' + state.sheet.length + ' PDFs');
+  }
 }
 
 function startAutosave() {
