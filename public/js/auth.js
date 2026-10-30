@@ -1,4 +1,4 @@
-import { signUp, signIn, signInWithGoogle, signOut, getUser, onAuthStateChange } from './supabase.js';
+import { signUp, signIn, signInWithGoogle, signOut, getUser, getSession, onAuthStateChange } from './supabase.js';
 
 export async function doSignUp(email, password) {
   return signUp(email, password);
@@ -18,6 +18,10 @@ export async function doSignOut() {
 
 export async function currentUser() {
   return getUser();
+}
+
+export async function currentSession() {
+  return getSession();
 }
 
 export function watchAuth(callback) {

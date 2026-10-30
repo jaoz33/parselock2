@@ -1,4 +1,4 @@
-import { currentUser, watchAuth, doSignIn, doSignUp, doSignOut, doGoogleSignIn } from './auth.js';
+import { currentUser, watchAuth, doSignIn, doSignUp, doSignOut, doGoogleSignIn, currentSession } from './auth.js';
 import { listTasks, readTask, addTask, saveTask, removeTask } from './tasks.js';
 import { initDrawer } from './editor/drawer.js';
 import { Ads } from './ads.js';
@@ -317,7 +317,14 @@ function escape(str) {
 
 function init() {
   watchAuth((user) => { state.user = user; renderAuth(); });
-  currentUser().then(u => { state.user = u; renderAuth(); loadTemplates(); }).catch((e) => {
+  currentSession().then(s => { 
+    if (s?.user) { state.user = s.user; renderAuth(); } 
+    return currentUser(); 
+  }).then(u => { 
+    state.user = u; 
+    renderAuth(); 
+    loadTemplates(); 
+  }).catch((e) => {
     console.error('Auth init failed:', e);
     toast('Authentication unavailable. Working offline.');
   });
