@@ -14,7 +14,7 @@ import { applyFont, applyFontSize, applyColor, clearFormat, toggleBold, toggleIt
 window.ADS_ENABLED = false;
 
 let state = { user: null, tasks: [], current: null, sheet: null, mapping: {}, placeholders: [], dirty: false, inheritFormats: {} };
-const routes = { '#templates': renderTemplates, '#editor': renderEditor, '#privacy': renderPrivacy };
+const routes = { '#templates': renderTemplates, '#editor': renderEditor, '#privacy': renderPrivacy, '#terms': renderTerms };
 
 function navigate() {
   const hash = location.hash || '#templates';
@@ -305,6 +305,10 @@ function clearSheet() {
 
 function renderPrivacy() {
   document.getElementById('app').innerHTML = '<div class="container"><h1>Privacy Notice</h1><p>ParseLock processes spreadsheets and generated documents entirely in your browser. Nothing leaves your device except templates and metadata you choose to save.</p></div>';
+}
+
+function renderTerms() {
+  document.getElementById('app').innerHTML = '<div class="container"><h1>Terms of Service</h1><p>ParseLock is provided as-is. You are responsible for the content you generate. We do not guarantee availability or fitness for a particular purpose.</p></div>';
 }
 
 function escape(str) {
