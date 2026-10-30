@@ -18,7 +18,12 @@ const routes = { '#templates': renderTemplates, '#editor': renderEditor, '#priva
 
 function navigate() {
   const hash = location.hash || '#templates';
-  const fn = routes[hash.split('/')[0]] || renderTemplates;
+  const key = hash.split('/')[0];
+  const fn = routes[key] || renderTemplates;
+  const publicPages = ['#privacy', '#terms'];
+  if (!publicPages.includes(key)) {
+    clearAutosave();
+  }
   fn();
 }
 
