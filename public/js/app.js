@@ -8,7 +8,8 @@ import { parseSheet, previewRows, autoMap, renderMappingUI } from './sheet.js';
 import { mergeRow } from './generate.js';
 import { exportDocx, exportPdf, downloadBlob, downloadZip } from './export.js';
 import { toast, confirm, showProgress, hideProgress } from './ui.js';
-import { execCmd, formatBlock, insertPlaceholder, insertTable, insertPageBreak, toggleBold, toggleItalic, toggleUnderline, toggleStrike, toggleSub, toggleSuper, justifyLeft, justifyCenter, justifyRight, justifyFull, insertBullet, insertNumber, indent, outdent, clearFormat, applyFont, applyFontSize, applyColor } from './editor/toolbar.js';
+import { execCmd, formatBlock, insertPlaceholder, insertTable, insertPageBreak } from './editor/toolbar.js';
+import { applyFont, applyFontSize, applyColor, clearFormat, toggleBold, toggleItalic, toggleUnderline, toggleStrike, toggleSub, toggleSuper, justifyLeft, justifyCenter, justifyRight, justifyFull, insertBullet, insertNumber, indent, outdent } from './editor/formatting.js';
 
 window.ADS_ENABLED = false;
 
@@ -195,7 +196,7 @@ function clearAutosave() {
   if (state.autosaveTimer) { clearInterval(state.autosaveTimer); state.autosaveTimer = null; }
 }
 
-function importDocx() {
+async function importDocx() {
   const input = document.getElementById('docx-input');
   const file = input.files[0];
   if (!file) return;
