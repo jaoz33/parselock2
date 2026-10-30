@@ -39,6 +39,7 @@
   font-size: 1.125rem;
 }
 .wordmark .accent { color: var(--teal); }
+.brand-icon { width: 32px; height: 32px; display: block; }
 .main-nav { display: flex; gap: 1.25rem; }
 .main-nav a {
   color: #cbd5e1;
