@@ -104,7 +104,7 @@ function bindEditorActions() {
     }
   };
   document.getElementById('import-docx').onclick = () => document.getElementById('docx-input').click();
-  document.getElementById('docx-input').onchange = importDocx;
+  document.getElementById('docx-input').onchange = (e) => { if (validateDocx(e.target.files[0])) importDocx(); };
   document.getElementById('page-setup').onclick = showPageSetup;
   document.getElementById('preview-sheet').onclick = previewSheet;
   document.getElementById('preview-merge').onclick = previewFirstMerge;
@@ -114,12 +114,33 @@ function bindEditorActions() {
   window.Toolbar = { execCmd, formatBlock, insertPlaceholder, insertTable, insertPageBreak, toggleBold, toggleItalic, toggleUnderline, toggleStrike, toggleSub, toggleSuper, justifyLeft, justifyCenter, justifyRight, justifyFull, insertBullet, insertNumber, indent, outdent, clearFormat, applyFont, applyFontSize, applyColor };
 }
 
+function validateDocx(file) {
+  if (!file) { toast('Choose a DOCX file first'); return false; }
+  const ext = file.name.toLowerCase().split('.').pop();
+  if (ext !== 'docx') { toast('Only .docx files are supported'); return false; }
+  if (file.size > 10 * 1024 * 1024) { toast('DOCX file must be under 10 MB'); return false; }
+  return true;
+}
+
+function validateSheet(file) {
+  if (!file) { toast('Choose a spreadsheet first'); return false; }
+  const ext = file.name.toLowerCase().split('.').pop();
+  if (!['csv', 'xlsx', 'xls'].includes(ext)) { toast('Only .csv, .xlsx, and .xls files are supported'); return false; }
+  if (file.size > 5 * 1024 * 1024) { toast('Spreadsheet must be under 5 MB'); return false; }
+  return true;
+}
+
 async function previewSheet() {
   const input = document.getElementById('sheet-input');
   const file = input.files[0];
   if (!file) { toast('Choose a file first'); return; }
+  if (!validateSheet(file)) return;
   try {
     const rows = await parseSheet(file);
+    if (rows.length > 2000) {
+      toast('Spreadsheet exceeds 2000 rows. Please use a smaller file.');
+      return;
+    }
     state.sheet = rows;
     const preview = previewRows(rows, 5);
     const headers = rows.length ? Object.keys(rows[0]) : [];
