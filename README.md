@@ -27,3 +27,4 @@ All environment values live in `public/js/config.js`. Commit `public/js/config.e
 - `docs/DEPLOY_CLOUDFLARE.md` - Cloudflare Pages deployment steps
 - `docs/DECISIONS.md` - Architecture decisions
 - `docs/PHASE2.md` - Phase 2 readiness plan
+# redeploy
