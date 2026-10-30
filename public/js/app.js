@@ -23,7 +23,7 @@ function navigate() {
 
 function renderTemplates() {
   clearAutosave();
-  document.getElementById('app').innerHTML = '<div class="container"><div class="toolbar"><button id="new-template" class="btn">New Template</button></div><div id="template-list"></div></div>';
+  document.getElementById('app').innerHTML = '<div class="container"><div class="toolbar"><button id="new-template" class="btn">New Template</button></div><div id="template-list"><p class="empty">Loading templates...</p></div></div>';
   document.getElementById('new-template').onclick = createNewTemplate;
   loadTemplates();
 }
@@ -36,18 +36,23 @@ async function createNewTemplate() {
 
 async function loadTemplates() {
   const list = document.getElementById('template-list');
+  if (!list) return;
   list.innerHTML = '<div class="loader"></div>';
   try {
     state.tasks = await listTasks();
+    if (!state.tasks.length) {
+      list.innerHTML = '<p class="empty">No templates yet. Click <b>New Template</b> to start.</p>';
+      return;
+    }
     list.innerHTML = state.tasks.map(t => cardHtml(t)).join('');
     bindTaskActions();
   } catch (e) {
-    list.innerHTML = '<p class="error">Failed to load templates.</p>';
+    list.innerHTML = '<p class="error">Failed to load templates: ' + escape(e.message) + '</p>';
   }
 }
 
 function cardHtml(t) {
-  return '<div class="card"><h3>' + escape(t.title) + '</h3><p>Status: ' + t.status + ' | Placeholders: ' + (t.placeholders?.length || 0) + ' | Updated: ' + new Date(t.updated_at).toLocaleDateString() + '</p><button data-open="' + t.id + '">Open</button>' + (state.user ? '<button data-delete="' + t.id + '">Delete</button>' : '<p class="hint">Sign in to save</p>') + '</div>';
+  return '<div class="card"><h3>' + escape(t.title) + '</h3><p>Status: ' + escape(t.status) + ' | Placeholders: ' + (t.placeholders?.length || 0) + ' | Updated: ' + new Date(t.updated_at).toLocaleDateString() + '</p><div class="card-actions"><button data-open="' + t.id + '" class="btn btn-small">Open</button>' + (state.user ? '<button data-delete="' + t.id + '" class="btn btn-danger btn-small">Delete</button>' : '<span class="hint">Sign in to save</span>') + '</div></div>';
 }
 
 function bindTaskActions() {
@@ -90,7 +95,13 @@ function bindEditorActions() {
     clearAutosave();
     location.hash = '#templates';
   };
-  document.getElementById('editor-generate').onclick = () => { const panel = document.getElementById('sheet-panel'); panel.hidden = !panel.hidden; };
+  document.getElementById('editor-generate').onclick = () => { 
+    const panel = document.getElementById('sheet-panel'); 
+    panel.hidden = !panel.hidden; 
+    if (!panel.hidden && !state.sheet) {
+      document.getElementById('sheet-preview').innerHTML = '<p class="hint">Upload a spreadsheet to map columns and generate documents.</p>';
+    }
+  };
   document.getElementById('import-docx').onclick = () => document.getElementById('docx-input').click();
   document.getElementById('docx-input').onchange = importDocx;
   document.getElementById('page-setup').onclick = showPageSetup;
@@ -335,7 +346,7 @@ function renderAuth() {
     el.innerHTML = '<span>' + escape(state.user.email) + '</span><span class="badge badge-success">RA 10173 compliant</span><button id="sign-out" class="btn btn-secondary btn-small">Sign out</button>';
     document.getElementById('sign-out').onclick = () => doSignOut().then(() => location.reload());
   } else {
-    el.innerHTML = '<button id="sign-in">Sign in</button><button id="sign-up">Sign up</button>';
+    el.innerHTML = '<button id="sign-in" class="btn btn-secondary btn-small">Sign in</button><button id="sign-up" class="btn btn-small">Sign up</button>';
     document.getElementById('sign-in').onclick = () => { const email = prompt('Email'); const password = prompt('Password'); if (email && password) doSignIn(email, password).catch(() => toast('Sign in failed')); };
     document.getElementById('sign-up').onclick = () => { const email = prompt('Email'); const password = prompt('Password'); if (email && password) doSignUp(email, password).catch(() => toast('Sign up failed')); };
   }
