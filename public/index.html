@@ -43,6 +43,7 @@
   <footer class="site-footer"><div class="container"><p>ParseLock v1.0.0-phase1</p></div></footer>
 
   <div id="confirm-modal" class="modal" hidden><div class="modal-backdrop"></div><div class="modal-dialog"><p id="confirm-message"></p><div class="modal-actions"><button id="confirm-ok">OK</button><button id="confirm-cancel">Cancel</button></div></div></div>
+  <div id="auth-modal" class="modal" hidden><div class="modal-backdrop"></div><div class="modal-dialog"><h3 style="margin:0 0 1rem;font-size:1rem;" id="auth-modal-title">Sign in</h3><form id="auth-form" class="page-setup-form"><div class="page-setup-row"><label>Email</label><input id="auth-email" type="email" class="input" required /></div><div class="page-setup-row"><label>Password</label><input id="auth-password" type="password" class="input" required /></div><p id="auth-error" class="error" style="margin:0;font-size:0.8125rem;"></p><div class="modal-actions"><button id="auth-cancel" class="btn btn-secondary" type="button">Cancel</button><button id="auth-submit" class="btn" type="submit">Sign in</button></div></form></div></div>
   <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
   <script type="module" src="/js/config.js"></script>

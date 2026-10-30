@@ -348,9 +348,62 @@ function renderAuth() {
     document.getElementById('sign-out').onclick = () => doSignOut().then(() => location.reload());
   } else {
     el.innerHTML = '<button id="sign-in" class="btn btn-secondary btn-small">Sign in</button><button id="sign-up" class="btn btn-small">Sign up</button>';
-    document.getElementById('sign-in').onclick = () => { const email = prompt('Email'); const password = prompt('Password'); if (email && password) doSignIn(email, password).catch(() => toast('Sign in failed')); };
-    document.getElementById('sign-up').onclick = () => { const email = prompt('Email'); const password = prompt('Password'); if (email && password) doSignUp(email, password).catch(() => toast('Sign up failed')); };
+    document.getElementById('sign-in').onclick = () => showAuthModal('signin');
+    document.getElementById('sign-up').onclick = () => showAuthModal('signup');
   }
+}
+
+function showAuthModal(mode) {
+  const modal = document.getElementById('auth-modal');
+  if (!modal) return;
+  const title = document.getElementById('auth-modal-title');
+  const submit = document.getElementById('auth-submit');
+  const email = document.getElementById('auth-email');
+  const password = document.getElementById('auth-password');
+  const error = document.getElementById('auth-error');
+  if (!title || !submit || !email || !password || !error) return;
+  title.textContent = mode === 'signup' ? 'Sign up' : 'Sign in';
+  submit.textContent = mode === 'signup' ? 'Sign up' : 'Sign in';
+  email.value = '';
+  password.value = '';
+  error.textContent = '';
+  modal.hidden = false;
+  email.focus();
+  const close = () => { modal.hidden = true; };
+  document.getElementById('auth-cancel').onclick = close;
+  modal.querySelector('.modal-backdrop').onclick = close;
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    error.textContent = '';
+    const emailVal = email.value.trim();
+    const passwordVal = password.value;
+    if (!emailVal || !passwordVal) {
+      error.textContent = 'Email and password are required.';
+      return;
+    }
+    if (passwordVal.length < 6) {
+      error.textContent = 'Password must be at least 6 characters.';
+      return;
+    }
+    submit.disabled = true;
+    try {
+      if (mode === 'signup') {
+        await doSignUp(emailVal, passwordVal);
+        toast('Account created. You can now sign in.');
+        close();
+        showAuthModal('signin');
+      } else {
+        await doSignIn(emailVal, passwordVal);
+        close();
+        toast('Signed in');
+      }
+    } catch (err) {
+      error.textContent = err.message || 'Authentication failed.';
+    } finally {
+      submit.disabled = false;
+    }
+  };
+  document.getElementById('auth-form').onsubmit = onSubmit;
 }
 
 export { init, state };
