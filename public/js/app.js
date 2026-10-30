@@ -1,4 +1,4 @@
-import { currentUser, watchAuth, doSignIn, doSignUp, doSignOut } from './auth.js';
+import { currentUser, watchAuth, doSignIn, doSignUp, doSignOut, doGoogleSignIn } from './auth.js';
 import { listTasks, readTask, addTask, saveTask, removeTask } from './tasks.js';
 import { initDrawer } from './editor/drawer.js';
 import { Ads } from './ads.js';
@@ -446,6 +446,13 @@ function showAuthModal(mode) {
   const close = () => { modal.hidden = true; };
   document.getElementById('auth-cancel').onclick = close;
   modal.querySelector('.modal-backdrop').onclick = close;
+  const googleBtn = document.getElementById('auth-google');
+  if (googleBtn) {
+    googleBtn.onclick = async () => {
+      close();
+      try { await doGoogleSignIn(); } catch (e) { toast(e.message || 'Google sign-in failed'); }
+    };
+  }
   const onSubmit = async (e) => {
     e.preventDefault();
     error.textContent = '';
