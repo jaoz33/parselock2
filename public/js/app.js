@@ -35,7 +35,9 @@ function renderTemplates() {
 }
 
 async function createNewTemplate() {
-  const task = await addTask({ title: 'Untitled template', template_html: '<p><br></p>', placeholders: [], status: 'draft' });
+  const task = state.user
+    ? await addTask({ title: 'Untitled template', template_html: '<p><br></p>', placeholders: [], status: 'draft' })
+    : await localAddTask({ title: 'Untitled template', template_html: '<p><br></p>', placeholders: [], status: 'draft' });
   state.tasks.unshift(task);
   openTask(task.id);
 }
@@ -45,7 +47,7 @@ async function loadTemplates() {
   if (!list) return;
   list.innerHTML = '<div class="loader"></div>';
   try {
-    state.tasks = await listTasks();
+    state.tasks = state.user ? await listTasks() : await localListTasks();
     if (!state.tasks.length) {
       list.innerHTML = '<p class="empty">No templates yet. Click <b>New Template</b> to start.</p>';
       return;
@@ -58,16 +60,30 @@ async function loadTemplates() {
 }
 
 function cardHtml(t) {
-  return '<div class="card"><h3>' + escape(t.title) + '</h3><p>Status: ' + escape(t.status) + ' | Placeholders: ' + (t.placeholders?.length || 0) + ' | Updated: ' + new Date(t.updated_at).toLocaleDateString() + '</p><div class="card-actions"><button data-open="' + t.id + '" class="btn btn-small">Open</button>' + (state.user ? '<button data-delete="' + t.id + '" class="btn btn-danger btn-small">Delete</button>' : '<span class="hint">Sign in to save</span>') + '</div></div>';
+  const isLocal = t.is_local || t.id.startsWith('local-');
+  const deleteBtn = state.user || isLocal
+    ? '<button data-delete="' + t.id + '" class="btn btn-danger btn-small">Delete</button>'
+    : '<span class="hint">Sign in to save</span>';
+  return '<div class="card"><h3>' + escape(t.title) + '</h3><p>Status: ' + escape(t.status) + ' | Placeholders: ' + (t.placeholders?.length || 0) + ' | Updated: ' + new Date(t.updated_at).toLocaleDateString() + '</p><div class="card-actions"><button data-open="' + t.id + '" class="btn btn-small">Open</button>' + deleteBtn + '</div></div>';
 }
 
 function bindTaskActions() {
   document.querySelectorAll('[data-open]').forEach(b => b.onclick = () => openTask(b.dataset.open));
-  document.querySelectorAll('[data-delete]').forEach(b => b.onclick = async () => { if (await confirm('Delete this template?')) { await removeTask(b.dataset.delete); loadTemplates(); } });
+  document.querySelectorAll('[data-delete]').forEach(b => b.onclick = async () => {
+    if (!await confirm('Delete this template?')) return;
+    const id = b.dataset.delete;
+    if (state.user) {
+      await removeTask(id);
+    } else {
+      await localRemoveTask(id);
+    }
+    loadTemplates();
+  });
 }
 
 async function openTask(id) {
-  const task = await readTask(id);
+  const task = state.user ? await readTask(id) : await localReadTask(id);
+  if (!task) { location.hash = '#templates'; return; }
   state.current = task;
   state.placeholders = detectPlaceholders(task.template_html || '');
   location.hash = '#editor/' + id;
@@ -78,7 +94,8 @@ function renderEditor() {
   const task = state.tasks.find(t => t.id === id) || state.current;
   if (!task) { location.hash = '#templates'; return; }
   state.current = task;
-  document.getElementById('app').innerHTML = '<div class="editor-shell"><div class="editor-topbar"><button id="editor-close" class="btn btn-secondary">Close</button><input id="editor-title" class="input" value="' + escape(task.title) + '" /><button id="editor-save" class="btn" title="Ctrl+S">Save</button><button id="editor-generate" class="btn" title="Ctrl+Enter">Generate</button><button id="import-docx" class="btn btn-secondary">Import DOCX</button><button id="page-setup" class="btn btn-secondary">Page Setup</button><input type="file" id="docx-input" accept=".docx" hidden /></div><div id="tool-drawer" class="tool-drawer"><div id="drawer-handle" class="drawer-handle" aria-expanded="false">Tools</div><div class="tool-panels"><div class="tool-group"><button onclick="window.Toolbar.toggleBold()" title="Bold (Ctrl+B)"><b>B</b></button><button onclick="window.Toolbar.toggleItalic()" title="Italic (Ctrl+I)"><i>I</i></button><button onclick="window.Toolbar.toggleUnderline()" title="Underline (Ctrl+U)"><u>U</u></button><button onclick="window.Toolbar.toggleStrike()" title="Strikethrough"><s>S</s></button><button onclick="window.Toolbar.toggleSub()" title="Subscript">Sub</button><button onclick="window.Toolbar.toggleSuper()" title="Superscript">Sup</button></div><div class="tool-group"><button onclick="window.Toolbar.justifyLeft()" title="Align left">Left</button><button onclick="window.Toolbar.justifyCenter()" title="Center">Center</button><button onclick="window.Toolbar.justifyRight()" title="Right">Right</button><button onclick="window.Toolbar.justifyFull()" title="Justify">Justify</button></div><div class="tool-group"><button onclick="window.Toolbar.insertBullet()" title="Bullet list">List</button><button onclick="window.Toolbar.insertNumber()" title="Numbered list">1. List</button><button onclick="window.Toolbar.indent()" title="Indent">Indent</button><button onclick="window.Toolbar.outdent()" title="Outdent">Outdent</button></div><div class="tool-group"><button onclick="window.Toolbar.formatBlock(&quot;H1&quot;)" title="Heading 1">H1</button><button onclick="window.Toolbar.formatBlock(&quot;H2&quot;)" title="Heading 2">H2</button><button onclick="window.Toolbar.formatBlock(&quot;P&quot;)" title="Paragraph">P</button></div><div class="tool-group"><button onclick="window.Toolbar.insertTable()" title="Insert table">Table</button><button onclick="window.Toolbar.insertPageBreak()" title="Page break">Break</button><button onclick="window.Toolbar.insertPlaceholder()" title="Insert placeholder">{{}}</button></div><div class="tool-group"><button onclick="window.Toolbar.applyFont(&quot;system-ui&quot;)" title="System font">Sans</button><button onclick="window.Toolbar.applyFont(&quot;ui-monospace&quot;)" title="Mono font">Mono</button><button onclick="window.Toolbar.applyFontSize(3)" title="Normal size">Norm</button><button onclick="window.Toolbar.applyFontSize(1)" title="Small">Small</button></div><div class="tool-group"><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#12305e&quot;)" title="Navy">Navy</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#0fa68a&quot;)" title="Teal">Teal</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#f0a23b&quot;)" title="Amber">Amber</button><button onclick="window.Toolbar.clearFormat()" title="Clear formatting">Clear</button></div></div></div><div id="editor" class="page-canvas" contenteditable="true"></div><div id="sheet-panel" class="sheet-panel" hidden><div class="sheet-toolbar"><input type="file" id="sheet-input" accept=".csv,.xlsx,.xls" /><button id="preview-sheet" class="btn">Preview</button><button id="preview-merge" class="btn btn-secondary">Preview First</button><button id="clear-sheet" class="btn btn-secondary">Clear</button><select id="filename-column"><option value="">Filename column...</option></select><button id="download-docx" class="btn">DOCX</button><button id="download-pdf" class="btn">PDF</button></div><div id="sheet-preview" class="sheet-preview"></div><div id="mapping-container" class="mapping-container"></div></div></div>';
+  const saveBtn = state.user ? 'Save' : 'Sign in to save';
+  document.getElementById('app').innerHTML = '<div class="editor-shell"><div class="editor-topbar"><button id="editor-close" class="btn btn-secondary">Close</button><input id="editor-title" class="input" value="' + escape(task.title) + '" /><button id="editor-save" class="btn" title="Ctrl+S">' + saveBtn + '</button><button id="editor-generate" class="btn" title="Ctrl+Enter">Generate</button><button id="import-docx" class="btn btn-secondary">Import DOCX</button><button id="page-setup" class="btn btn-secondary">Page Setup</button><input type="file" id="docx-input" accept=".docx" hidden /></div><div id="tool-drawer" class="tool-drawer"><div id="drawer-handle" class="drawer-handle" aria-expanded="false">Tools</div><div class="tool-panels"><div class="tool-group"><button onclick="window.Toolbar.toggleBold()" title="Bold (Ctrl+B)"><b>B</b></button><button onclick="window.Toolbar.toggleItalic()" title="Italic (Ctrl+I)"><i>I</i></button><button onclick="window.Toolbar.toggleUnderline()" title="Underline (Ctrl+U)"><u>U</u></button><button onclick="window.Toolbar.toggleStrike()" title="Strikethrough"><s>S</s></button><button onclick="window.Toolbar.toggleSub()" title="Subscript">Sub</button><button onclick="window.Toolbar.toggleSuper()" title="Superscript">Sup</button></div><div class="tool-group"><button onclick="window.Toolbar.justifyLeft()" title="Align left">Left</button><button onclick="window.Toolbar.justifyCenter()" title="Center">Center</button><button onclick="window.Toolbar.justifyRight()" title="Right">Right</button><button onclick="window.Toolbar.justifyFull()" title="Justify">Justify</button></div><div class="tool-group"><button onclick="window.Toolbar.insertBullet()" title="Bullet list">List</button><button onclick="window.Toolbar.insertNumber()" title="Numbered list">1. List</button><button onclick="window.Toolbar.indent()" title="Indent">Indent</button><button onclick="window.Toolbar.outdent()" title="Outdent">Outdent</button></div><div class="tool-group"><button onclick="window.Toolbar.formatBlock(&quot;H1&quot;)" title="Heading 1">H1</button><button onclick="window.Toolbar.formatBlock(&quot;H2&quot;)" title="Heading 2">H2</button><button onclick="window.Toolbar.formatBlock(&quot;P&quot;)" title="Paragraph">P</button></div><div class="tool-group"><button onclick="window.Toolbar.insertTable()" title="Insert table">Table</button><button onclick="window.Toolbar.insertPageBreak()" title="Page break">Break</button><button onclick="window.Toolbar.insertPlaceholder()" title="Insert placeholder">{{}}</button></div><div class="tool-group"><button onclick="window.Toolbar.applyFont(&quot;system-ui&quot;)" title="System font">Sans</button><button onclick="window.Toolbar.applyFont(&quot;ui-monospace&quot;)" title="Mono font">Mono</button><button onclick="window.Toolbar.applyFontSize(3)" title="Normal size">Norm</button><button onclick="window.Toolbar.applyFontSize(1)" title="Small">Small</button></div><div class="tool-group"><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#12305e&quot;)" title="Navy">Navy</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#0fa68a&quot;)" title="Teal">Teal</button><button onclick="window.Toolbar.applyColor(&quot;foreColor&quot;, &quot;#f0a23b&quot;)" title="Amber">Amber</button><button onclick="window.Toolbar.clearFormat()" title="Clear formatting">Clear</button></div></div></div><div id="editor" class="page-canvas" contenteditable="true"></div><div id="sheet-panel" class="sheet-panel" hidden><div class="sheet-toolbar"><input type="file" id="sheet-input" accept=".csv,.xlsx,.xls" /><button id="preview-sheet" class="btn">Preview</button><button id="preview-merge" class="btn btn-secondary">Preview First</button><button id="clear-sheet" class="btn btn-secondary">Clear</button><select id="filename-column"><option value="">Filename column...</option></select><button id="download-docx" class="btn">DOCX</button><button id="download-pdf" class="btn">PDF</button></div><div id="sheet-preview" class="sheet-preview"></div><div id="mapping-container" class="mapping-container"></div></div></div>';
   initDrawer();
   const editor = document.getElementById('editor');
   if (editor) editor.contentEditable = 'true';
@@ -91,8 +108,13 @@ function bindEditorActions() {
   if (!editor) return;
   editor.addEventListener('input', () => { state.dirty = true; state.placeholders = detectPlaceholders(editor.innerHTML); });
   document.getElementById('editor-save').onclick = async () => {
+    if (!state.user) {
+      showAuthModal('signin');
+      return;
+    }
     const title = document.getElementById('editor-title').value.trim() || 'Untitled';
-    await saveTask(state.current.id, { title, template_html: editor.innerHTML, placeholders: state.placeholders });
+    const saveFn = state.user ? saveTask : localSaveTask;
+    await saveFn(state.current.id, { title, template_html: editor.innerHTML, placeholders: state.placeholders });
     state.dirty = false;
     toast('Saved');
   };
@@ -441,6 +463,51 @@ function renderAuth() {
     document.getElementById('sign-in').onclick = () => showAuthModal('signin');
     document.getElementById('sign-up').onclick = () => showAuthModal('signup');
   }
+}
+
+function localTemplatesKey() {
+  return 'parselock-local-templates';
+}
+
+function loadLocalTemplates() {
+  try {
+    return JSON.parse(localStorage.getItem(localTemplatesKey()) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveLocalTemplates(templates) {
+  localStorage.setItem(localTemplatesKey(), JSON.stringify(templates));
+}
+
+async function localListTasks() {
+  return loadLocalTemplates();
+}
+
+async function localReadTask(id) {
+  return loadLocalTemplates().find(t => t.id === id) || null;
+}
+
+async function localAddTask(task) {
+  const templates = loadLocalTemplates();
+  const newTask = { ...task, id: 'local-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8), updated_at: new Date().toISOString(), is_local: true };
+  templates.unshift(newTask);
+  saveLocalTemplates(templates);
+  return newTask;
+}
+
+async function localSaveTask(id, updates) {
+  const templates = loadLocalTemplates();
+  const idx = templates.findIndex(t => t.id === id);
+  if (idx === -1) throw new Error('Template not found');
+  templates[idx] = { ...templates[idx], ...updates, updated_at: new Date().toISOString() };
+  saveLocalTemplates(templates);
+  return templates[idx];
+}
+
+async function localRemoveTask(id) {
+  saveLocalTemplates(loadLocalTemplates().filter(t => t.id !== id));
 }
 
 function showAuthModal(mode) {
