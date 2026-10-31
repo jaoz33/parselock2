@@ -7,7 +7,7 @@ export function formatBlock(tag) {
 }
 
 export function insertPlaceholder(name) {
-  const text = '{{' + name + '}}';
+  const text = '<' + name + '>';
   document.execCommand('insertText', false, text);
 }
 

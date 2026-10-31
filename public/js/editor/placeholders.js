@@ -1,6 +1,6 @@
 export function detectPlaceholders(html) {
   const matches = new Set();
-  const regex = /\{\{\s*([a-zA-Z0-9_\s]+)\s*\}\}/g;
+  const regex = /<([A-Z][a-zA-Z0-9_\s]*)>/g;
   let m;
   while ((m = regex.exec(html)) !== null) {
     matches.add(m[1].trim().toLowerCase().replace(/\s+/g, ' '));
