@@ -63,14 +63,17 @@
   <script type="module" src="/js/editor/formatting.js"></script>
   <script type="module" src="/js/app.js"></script>
   <script type="module">
-    window.addEventListener('DOMContentLoaded', async () => {
+    (async () => {
       try {
+        if (document.readyState === 'loading') {
+          await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true }));
+        }
         const { init } = await import('/js/app.js');
         await init();
       } catch (e) {
         console.error('Init failed:', e);
       }
-    });
+    })();
   </script>
 </body>
 </html>
