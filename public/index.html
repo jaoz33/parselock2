@@ -65,15 +65,19 @@
   <script type="module" src="/js/editor/formatting.js"></script>
   <script type="module" src="/js/app.js"></script>
   <script type="module">
+    window._initRan = 0;
     (async () => {
+      window._initRan = Date.now();
       try {
         if (document.readyState === 'loading') {
           await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true }));
         }
         const { init } = await import('/js/app.js');
         await init();
+        window._initDone = Date.now();
       } catch (e) {
         console.error('Init failed:', e);
+        window._initError = e.message;
       }
     })();
   </script>
