@@ -2,8 +2,11 @@
   "name": "parselock",
   "version": "1.0.0-phase1",
   "private": true,
+  "type": "module",
   "scripts": {
+    "predev": "node scripts/update-version.js",
     "dev": "npx wrangler dev",
+    "predeploy": "node scripts/update-version.js",
     "deploy": "npx wrangler deploy"
   },
   "devDependencies": {
